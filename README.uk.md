@@ -102,3 +102,6 @@ Pages, в ветку `gh-pages`, каждый раз когда обновляе
 https://docs.github.com/en/get-started/getting-started-with-git/managing-remote-repositories#changing-a-remote-repositorys-url
 
 $ git remote -v
+
+$ git remote set-url origin https://github.com/InnaAnatoliivna/goit-js-hw-08.git
+

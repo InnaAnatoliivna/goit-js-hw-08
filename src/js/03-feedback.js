@@ -34,7 +34,7 @@ function saveCurrentValue(evt) {
 // заповнюй ними поля форми.В іншому випадку поля повинні бути порожніми.
 
 const getFeedbackUser = localStorage.getItem(KEY_STORAGE_INPUT);
-console.log(getFeedbackUser);
+// console.log(getFeedbackUser);
 
 
 if (getFeedbackUser !== null) {
@@ -54,10 +54,10 @@ function handleSubmit(event) {
     event.preventDefault();
     if (inputEmail.value === '' || textareaMessage.value === '') {
         return alert('Please fill in all fields!');
-    } else if (getFeedbackUser !== null) {
-        console.log(feedbackUserParseJSON);
-        localStorage.removeItem(KEY_STORAGE_INPUT);
+    } else {
         inputEmail.value = '';
         textareaMessage.value = '';
+        console.log(feedbackUserParseJSON);
+        localStorage.removeItem(KEY_STORAGE_INPUT);
     }
 };

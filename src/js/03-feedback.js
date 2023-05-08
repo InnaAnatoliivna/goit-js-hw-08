@@ -5,7 +5,7 @@ import { throttle } from "lodash";
 const form = document.querySelector('.feedback-form')
 const inputEmail = document.querySelector('input');
 const textareaMessage = document.querySelector('textarea');
-const KEY_SRORAGE_INPUT = "feedback-form-state";
+const KEY_STORAGE_INPUT = "feedback-form-state";
 
 
 // 1.Відстежуй на формі подію input, і щоразу записуй у локальне сховище об'єкт 
@@ -15,9 +15,11 @@ const KEY_SRORAGE_INPUT = "feedback-form-state";
 // Для цього додай до проекту і використовуй бібліотеку lodash.throttle.
 
 form.addEventListener('input', throttle(saveCurrentValue, 500));
+
 let feedbackUser;
 let feedbackUserJSON;
 let feedbackUserParseJSON;
+
 function saveCurrentValue(evt) {
     if (inputEmail.value !== "" || textareaMessage.value !== "") {
         feedbackUser = {
@@ -25,28 +27,23 @@ function saveCurrentValue(evt) {
             message: textareaMessage.value
         };
         feedbackUserJSON = JSON.stringify(feedbackUser);
-        localStorage.setItem(KEY_SRORAGE_INPUT, feedbackUserJSON);
+        localStorage.setItem(KEY_STORAGE_INPUT, feedbackUserJSON);
     }
 };
-
-
 // 2.   Під час завантаження сторінки перевіряй стан сховища, і якщо там є збережені дані,
 // заповнюй ними поля форми.В іншому випадку поля повинні бути порожніми.
 
-const getFeedbackUser = localStorage.getItem(KEY_SRORAGE_INPUT);
+const getFeedbackUser = localStorage.getItem(KEY_STORAGE_INPUT);
+console.log(getFeedbackUser);
 
-// console.log(getFeedbackUser);
 
-try {
+if (getFeedbackUser !== null) {
     feedbackUserParseJSON = JSON.parse(getFeedbackUser);
-    if (getFeedbackUser !== '') {
-        inputEmail.value = feedbackUserParseJSON.email;
-        textareaMessage.value = feedbackUserParseJSON.message;
-    }
-} catch (error) {
-    console.error(error.message);
-}
+    // console.log(feedbackUserParseJSON);
 
+    inputEmail.value = feedbackUserParseJSON.email;
+    textareaMessage.value = feedbackUserParseJSON.message;
+}
 
 // 3.Під час сабміту форми очищуй сховище і поля форми, а також виводь у консоль об'єкт 
 // з полями email, message та їхніми поточними значеннями.
@@ -57,9 +54,10 @@ function handleSubmit(event) {
     event.preventDefault();
     if (inputEmail.value === '' || textareaMessage.value === '') {
         return alert('Please fill in all fields!');
+    } else if (getFeedbackUser !== null) {
+        console.log(feedbackUserParseJSON);
+        localStorage.removeItem(KEY_STORAGE_INPUT);
+        inputEmail.value = '';
+        textareaMessage.value = '';
     }
-    console.log(feedbackUserParseJSON);
-    localStorage.removeItem(KEY_SRORAGE_INPUT);
-    inputEmail.value = '';
-    textareaMessage.value = '';
 };

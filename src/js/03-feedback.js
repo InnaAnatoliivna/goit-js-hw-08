@@ -14,42 +14,34 @@ const KEY_STORAGE_INPUT = "feedback-form-state";
 // 4.Зроби так, щоб сховище оновлювалось не частіше, ніж раз на 500 мілісекунд.
 // Для цього додай до проекту і використовуй бібліотеку lodash.throttle.
 
-form.addEventListener('input', throttle(saveCurrentValue, 500));
 
-let feedbackUser;
-let feedbackUserJSON;
-let feedbackUserParseJSON;
 
-function saveCurrentValue(evt) {
-    if (inputEmail.value !== "" || textareaMessage.value !== "") {
-        feedbackUser = {
-            email: inputEmail.value,
-            message: textareaMessage.value
-        };
-        feedbackUserJSON = JSON.stringify(feedbackUser);
-        localStorage.setItem(KEY_STORAGE_INPUT, feedbackUserJSON);
-    }
-};
-// 2.   Під час завантаження сторінки перевіряй стан сховища, і якщо там є збережені дані,
-// заповнюй ними поля форми.В іншому випадку поля повинні бути порожніми.
-
+const feedbackUser = {};
 const getFeedbackUser = localStorage.getItem(KEY_STORAGE_INPUT);
 // console.log(getFeedbackUser);
 
-
-if (getFeedbackUser !== null) {
-    feedbackUserParseJSON = JSON.parse(getFeedbackUser);
+// 2.   Під час завантаження сторінки перевіряй стан сховища, і якщо там є збережені дані,
+// заповнюй ними поля форми.В іншому випадку поля повинні бути порожніми.
+if (getFeedbackUser) {
+    const feedbackUserParseJSON = JSON.parse(getFeedbackUser);
     // console.log(feedbackUserParseJSON);
-
     inputEmail.value = feedbackUserParseJSON.email;
     textareaMessage.value = feedbackUserParseJSON.message;
 }
-
-// 3.Під час сабміту форми очищуй сховище і поля форми, а також виводь у консоль об'єкт 
-// з полями email, message та їхніми поточними значеннями.
-
+form.addEventListener('input', throttle(saveCurrentValue, 500));
 form.addEventListener('submit', handleSubmit);
 
+function saveCurrentValue(evt) {
+    if (inputEmail.value !== "" || textareaMessage.value !== "") {
+        feedbackUser.email = inputEmail.value;
+        feedbackUser.message = textareaMessage.value;
+        const feedbackUserJSON = JSON.stringify(feedbackUser);
+
+        localStorage.setItem(KEY_STORAGE_INPUT, feedbackUserJSON);
+    }
+};
+// 3.Під час сабміту форми очищуй сховище і поля форми, а також виводь у консоль об'єкт 
+// з полями email, message та їхніми поточними значеннями.
 function handleSubmit(event) {
     event.preventDefault();
     if (inputEmail.value === '' || textareaMessage.value === '') {
@@ -57,7 +49,7 @@ function handleSubmit(event) {
     } else {
         inputEmail.value = '';
         textareaMessage.value = '';
-        console.log(feedbackUserParseJSON);
+        console.log(feedbackUserParseJSON); //?????
         localStorage.removeItem(KEY_STORAGE_INPUT);
     }
 };

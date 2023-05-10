@@ -14,22 +14,22 @@ const KEY_STORAGE_INPUT = "feedback-form-state";
 // 4.Зроби так, щоб сховище оновлювалось не частіше, ніж раз на 500 мілісекунд.
 // Для цього додай до проекту і використовуй бібліотеку lodash.throttle.
 
-
+form.addEventListener('input', throttle(saveCurrentValue, 500));
 
 const feedbackUser = {};
-const getFeedbackUser = localStorage.getItem(KEY_STORAGE_INPUT);
-// console.log(getFeedbackUser);
-
 // 2.   Під час завантаження сторінки перевіряй стан сховища, і якщо там є збережені дані,
 // заповнюй ними поля форми.В іншому випадку поля повинні бути порожніми.
-if (getFeedbackUser) {
+
+getDateFeedback();
+
+function getDateFeedback() {
+    const getFeedbackUser = localStorage.getItem(KEY_STORAGE_INPUT);
     const feedbackUserParseJSON = JSON.parse(getFeedbackUser);
-    // console.log(feedbackUserParseJSON);
-    inputEmail.value = feedbackUserParseJSON.email;
-    textareaMessage.value = feedbackUserParseJSON.message;
+    if (getFeedbackUser) {
+        inputEmail.value = feedbackUserParseJSON.email;
+        textareaMessage.value = feedbackUserParseJSON.message;
+    };
 }
-form.addEventListener('input', throttle(saveCurrentValue, 500));
-form.addEventListener('submit', handleSubmit);
 
 function saveCurrentValue(evt) {
     if (inputEmail.value !== "" || textareaMessage.value !== "") {
@@ -42,14 +42,26 @@ function saveCurrentValue(evt) {
 };
 // 3.Під час сабміту форми очищуй сховище і поля форми, а також виводь у консоль об'єкт 
 // з полями email, message та їхніми поточними значеннями.
+
+form.addEventListener('submit', handleSubmit);
+
 function handleSubmit(event) {
     event.preventDefault();
     if (inputEmail.value === '' || textareaMessage.value === '') {
         return alert('Please fill in all fields!');
     } else {
+        showObjectfeedback();
         inputEmail.value = '';
         textareaMessage.value = '';
-        console.log(feedbackUserParseJSON); //?????
         localStorage.removeItem(KEY_STORAGE_INPUT);
     }
 };
+function showObjectfeedback() {
+    const checkfeedbackUser = localStorage.getItem(KEY_STORAGE_INPUT);
+    const feedbackParseJSON = JSON.parse(checkfeedbackUser);
+    if (checkfeedbackUser) {
+        console.log(feedbackParseJSON);
+    }
+}
+
+
